@@ -1,4 +1,4 @@
-# DenT: Dense Transformers for 3D biomedical image Segmentation
+# DenT: Dense-Transformer for 3D Biomedical Image Segmentation
 
 ![](./figure/DenT.png)
 
