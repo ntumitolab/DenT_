@@ -49,12 +49,13 @@ def main():
     args = parser.parse_args()
 
     if not os.path.exists(args.log_dir):
-    	os.makedirs(args.log_dir)
+        os.makedirs(args.log_dir)
     if not os.path.exists(args.checkpoints):
-    	os.makedirs(args.checkpoints)
+        os.makedirs(args.checkpoints)
 
     ''' Setup GPU '''
     torch.cuda.set_device(args.gpu)
+    torch.cuda.empty_cache() # ShangRu_202307_Test
 
     ''' Setup Random Seed '''
     np.random.seed(args.random_seed)
@@ -72,10 +73,12 @@ def main():
     train_loader = torch.utils.data.DataLoader(data.SegDataset(args, mode='train'),
                                                batch_size=args.train_batch,
                                                num_workers=args.workers,
+                                               pin_memory=True, # ShangRu_202307_Test
                                                shuffle=True)
     val_loader = torch.utils.data.DataLoader(data.SegDataset(args, mode='val'),
                                              batch_size=args.train_batch,
                                              num_workers=args.workers,
+                                             pin_memory=True, # ShangRu_202307_Test
                                              shuffle=False)
 
     ''' Load Model '''
@@ -162,6 +165,8 @@ def main():
             save_model(model, os.path.join(args.checkpoints, '{}_{}_{}'.format(args.model, args.target_image, seed), 'model_{}_{}_pth.tar'.format(args.model, epoch)))
     
     print('The best model occurred in Epoch [{}] with validation loss {}'.format(best_epoch, best_val_loss))
+    
+    writer.add_graph(model, imgs) # ShangRu_202307_Test
 
     ''' Prepare Best Model for Visualization '''
     best_checkpoint = torch.load(os.path.join(args.checkpoints, '{}_{}_{}'.format(args.model, args.target_image, seed), 'model_{}_best_pth.tar'.format(args.model)))
