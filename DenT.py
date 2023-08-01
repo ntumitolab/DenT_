@@ -283,7 +283,7 @@ class SegmentationHead(nn.Sequential):
 
 class DenseTransformer(nn.Module):
     def __init__(self, args, img_size=[32,256,256], zero_head=False, vis=False):
-        super(VisionTransformer, self).__init__()
+        super().__init__() # ShangRu_202307_Test
         self.zero_head = zero_head
         self.transformer = Transformer(img_size, vis)
         self.decoder = DecoderCup()
