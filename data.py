@@ -1,4 +1,5 @@
 import os
+from pathlib import Path # ShangRu_202307_Test
 import torch
 import torchvision.transforms as transforms
 from torchvision.transforms import functional as F
@@ -40,8 +41,8 @@ class SegDataset(Dataset):
         self.root_dir = os.path.join(args.data_path, mode)
         
         #for tiff        
-        self.img_dir = os.path.join(self.root_dir, args.source_image)
-        self.seg_dir = os.path.join(self.root_dir, args.target_image)
+        self.img_dir = os.path.join(self.root_dir, args.source_image); print(f"img : {Path(self.img_dir).resolve()}") # ShangRu_202307_Test: data\{DataSet}_DenT\train\source
+        self.seg_dir = os.path.join(self.root_dir, args.target_image); print(f"seg : {Path(self.seg_dir).resolve()}") # ShangRu_202307_Test
         self.path_lists = [(os.path.join(self.img_dir, img), os.path.join(self.seg_dir, img)) for img in os.listdir(self.img_dir)]
         
     def __len__(self):
@@ -85,8 +86,8 @@ class SegDataset(Dataset):
             seg = seg.contiguous().view(-1, 1, kc, kh, kw)
 
             if self.mode == "val" or self.mode == "train":
-            rand = torch.randint(len(img), (16,)) #choose the number of patches to use
-            img = img[rand]
-            seg = seg[rand]
+                rand = torch.randint(len(img), (16,)) #choose the number of patches to use
+                img = img[rand]
+                seg = seg[rand]
      
-        return img_name.split('/')[-1], img, seg
+        return img_name.split(os.sep)[-1], img, seg # ShangRu_202307_Test
