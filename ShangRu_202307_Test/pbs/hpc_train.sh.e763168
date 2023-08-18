@@ -1,0 +1,39 @@
+Traceback (most recent call last):
+  File "../../train.py", line 193, in <module>
+    main()
+  File "../../train.py", line 149, in main
+    output = model(imgs)
+  File "/home/guest/gst23-16/mambaforge/envs/DenT-tensorboard/lib/python3.6/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/guest/gst23-16/mambaforge/envs/DenT-tensorboard/lib/python3.6/site-packages/torch/nn/parallel/data_parallel.py", line 168, in forward
+    outputs = self.parallel_apply(replicas, inputs, kwargs)
+  File "/home/guest/gst23-16/mambaforge/envs/DenT-tensorboard/lib/python3.6/site-packages/torch/nn/parallel/data_parallel.py", line 178, in parallel_apply
+    return parallel_apply(replicas, inputs, kwargs, self.device_ids[:len(replicas)])
+  File "/home/guest/gst23-16/mambaforge/envs/DenT-tensorboard/lib/python3.6/site-packages/torch/nn/parallel/parallel_apply.py", line 86, in parallel_apply
+    output.reraise()
+  File "/home/guest/gst23-16/mambaforge/envs/DenT-tensorboard/lib/python3.6/site-packages/torch/_utils.py", line 434, in reraise
+    raise exception
+RuntimeError: Caught RuntimeError in replica 0 on device 0.
+Original Traceback (most recent call last):
+  File "/home/guest/gst23-16/mambaforge/envs/DenT-tensorboard/lib/python3.6/site-packages/torch/nn/parallel/parallel_apply.py", line 61, in _worker
+    output = module(*input, **kwargs)
+  File "/home/guest/gst23-16/mambaforge/envs/DenT-tensorboard/lib/python3.6/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/guest/gst23-16/DenT/DenT.py", line 300, in forward
+    x = self.decoder(x, features)
+  File "/home/guest/gst23-16/mambaforge/envs/DenT-tensorboard/lib/python3.6/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/guest/gst23-16/DenT/DenT.py", line 273, in forward
+    out = self.final(x0_4)
+  File "/home/guest/gst23-16/mambaforge/envs/DenT-tensorboard/lib/python3.6/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/guest/gst23-16/DenT/DenT.py", line 24, in forward
+    x = self.conv2(x)
+  File "/home/guest/gst23-16/mambaforge/envs/DenT-tensorboard/lib/python3.6/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/guest/gst23-16/mambaforge/envs/DenT-tensorboard/lib/python3.6/site-packages/torch/nn/modules/conv.py", line 590, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+  File "/home/guest/gst23-16/mambaforge/envs/DenT-tensorboard/lib/python3.6/site-packages/torch/nn/modules/conv.py", line 586, in _conv_forward
+    input, weight, bias, self.stride, self.padding, self.dilation, self.groups
+RuntimeError: CUDA out of memory. Tried to allocate 128.00 MiB (GPU 0; 15.77 GiB total capacity; 13.92 GiB already allocated; 43.38 MiB free; 14.30 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+

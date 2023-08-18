@@ -1,0 +1,56 @@
+Job Id: 763166.pbs
+    Job_Name = hpc_train.sh
+    Job_Owner = gst23-16@n98
+    resources_used.cpupercent = 290
+    resources_used.cput = 00:00:29
+    resources_used.mem = 11778536kb
+    resources_used.ncpus = 16
+    resources_used.vmem = 114558300kb
+    resources_used.walltime = 00:00:10
+    job_state = R
+    queue = v100
+    server = pbs
+    Checkpoint = u
+    ctime = Fri Aug 11 05:00:49 2023
+    Error_Path = n98:/home/guest/gst23-16/DenT/ShangRu_202307_Test/bash/hpc_tra
+        in.sh.e763166
+    exec_host = v100-1/0*0
+    exec_vnode = (v100-1[0]:ngpus=1:ncpus=8+v100-1[1]:ngpus=1:ncpus=8)
+    Hold_Types = n
+    Join_Path = n
+    Keep_Files = n
+    Mail_Points = a
+    mtime = Fri Aug 11 05:00:59 2023
+    Output_Path = n98:/home/guest/gst23-16/DenT/ShangRu_202307_Test/bash/hpc_tr
+        ain.sh.o763166
+    Priority = 0
+    qtime = Fri Aug 11 05:00:49 2023
+    Rerunable = True
+    Resource_List.ncpus = 16
+    Resource_List.ngpus = 2
+    Resource_List.nodect = 1
+    Resource_List.nodes = 1
+    Resource_List.place = free
+    Resource_List.select = 1:ncpus=16:ngpus=2
+    Resource_List.walltime = 168:00:00
+    stime = Fri Aug 11 05:00:50 2023
+    session_id = 152114
+    jobdir = /home/guest/gst23-16
+    substate = 42
+    Variable_List = PBS_O_HOME=/home/guest/gst23-16,PBS_O_LANG=en_US.UTF-8,
+        PBS_O_LOGNAME=gst23-16,
+        PBS_O_PATH=/home/guest/gst23-16/.vscode-server/bin/6445d93c81ebe42c4cb
+        d7a60712e0b17d9463e97/bin/remote-cli:/usr/local/cuda-11.7/bin:/home/gue
+        st/gst23-16/mambaforge/envs/DenT-tensorboard/bin:/home/guest/gst23-16/a
+        naconda3/condabin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/bin:/usr/pb
+        s/bin:/usr/local/pdsh/bin:/usr/local/sbin:/usr/sbin:/usr/pbs/bin:/home/
+        guest/gst23-16/.local/bin:/home/guest/gst23-16/bin:/usr/pbs/bin,
+        PBS_O_MAIL=/var/spool/mail/gst23-16,PBS_O_SHELL=/bin/bash,
+        PBS_O_WORKDIR=/home/guest/gst23-16/DenT/ShangRu_202307_Test/bash,
+        PBS_O_SYSTEM=Linux,PBS_O_QUEUE=v100,PBS_O_HOST=n98
+    comment = Job run at Fri Aug 11 at 05:00 on (v100-1[0]:ngpus=1:ncpus=8+v100
+        -1[1]:ngpus=1:ncpus=8)
+    etime = Fri Aug 11 05:00:49 2023
+    run_count = 1
+    Submit_arguments = hpc_train.sh
+    project = _pbs_project_default
