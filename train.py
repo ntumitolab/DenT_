@@ -168,8 +168,7 @@ def main():
             writer.add_scalar('val_loss', val_loss.data.cpu().numpy(), epoch)
             print('Epoch [{}]: validation loss: {}'.format(epoch, val_loss.data.cpu().numpy()))
             
-            print(); print_nvidia_smi() # ShangRu_202307_Test
-            print("="*80, "\n") # ShangRu_202307_Test
+            print(); print("="*80, "\n") # ShangRu_202307_Test
 
             # Save Best Model 
             if val_loss < best_val_loss - 1e-4:
@@ -183,14 +182,9 @@ def main():
             save_model(model, os.path.join(args.checkpoints, '{}_{}_{}'.format(args.model, args.target_image, seed), 'model_{}_{}_pth.tar'.format(args.model, epoch)))
     
     print('The best model occurred in Epoch [{}] with validation loss {}'.format(best_epoch, best_val_loss))
-    
-    writer.add_graph(model, imgs) # ShangRu_202307_Test
 
-    ''' Prepare Best Model for Visualization '''
-    best_checkpoint = torch.load(os.path.join(args.checkpoints, '{}_{}_{}'.format(args.model, args.target_image, seed), 'model_{}_best_pth.tar'.format(args.model)))
-
-    model.load_state_dict(best_checkpoint)
-    model.eval()
+    print(); print_nvidia_smi() # ShangRu_202307_Test
+    # writer.add_graph(model, imgs) # ShangRu_202307_Test ( 改成 evaluate 再存 )
 
 if __name__ == '__main__':
 	main()
