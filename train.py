@@ -89,6 +89,20 @@ def main():
     else:
         raise NotImplementedError
     
+    # """ show `nvidia-smi` """ # ShangRu_202307_Test
+    # import subprocess
+    # # 要執行的命令
+    # command = "nvidia-smi"
+    # # 使用Popen執行命令，將stdout捕獲到PIPE中
+    # process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # # 從stdout讀取輸出
+    # output, error = process.communicate()
+    # # 將bytes轉換為字符串
+    # output_str = output.decode('utf-8')
+    # # 輸出結果
+    # print(f"stdout:{output_str}")
+    # print(f"torch.cuda.device_count() = {torch.cuda.device_count()}")
+    
     '''Data Parallel'''
     if torch.cuda.device_count() > 1:
         model = torch.nn.DataParallel(model)
