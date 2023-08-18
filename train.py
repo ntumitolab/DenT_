@@ -1,16 +1,16 @@
 import os
-import torch
-
 import argparse
-import DenT
-import data
+import subprocess # ShangRu_202307_Test
 
 import numpy as np
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-
 from tensorboardX import SummaryWriter
+
+import data
+import DenT
 from test import evaluate
 from utils import BCEDiceLoss
 
@@ -19,6 +19,20 @@ warnings.filterwarnings("ignore", '.*output shape of zoom.*')
 
 def save_model(model, save_path):
     torch.save(model.state_dict(), save_path)
+
+def print_nvidia_smi(): # ShangRu_202307_Test
+    """ show `nvidia-smi`
+    """ 
+    # 要執行的命令
+    command = "nvidia-smi"
+    # 使用Popen執行命令，將stdout捕獲到PIPE中
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # 從stdout讀取輸出
+    output, error = process.communicate()
+    # 將bytes轉換為字符串
+    output_str = output.decode('utf-8')
+    # 輸出結果
+    print(f"{output_str}")
 
 def main():
     parser = argparse.ArgumentParser(description='Mito-Net')
@@ -40,6 +54,7 @@ def main():
     parser.add_argument('--log_dir', type=str, default='logs')
     parser.add_argument('--checkpoints', type=str, default='checkpoints')
     parser.add_argument('--random_seed', type=int, default=123)
+    parser.add_argument('--seg_dir', type=str, default='seg_results') # ShangRu_202307_Test
 
     # deep supervision
     parser.add_argument('--deep_supervision', type=bool, default=False)
@@ -54,8 +69,8 @@ def main():
         os.makedirs(args.checkpoints)
 
     ''' Setup GPU '''
-    torch.cuda.set_device(args.gpu)
-    torch.cuda.empty_cache() # ShangRu_202307_Test
+    # torch.cuda.set_device(args.gpu) # ShangRu_202307_Test
+    # torch.cuda.empty_cache() # ShangRu_202307_Test
 
     ''' Setup Random Seed '''
     np.random.seed(args.random_seed)
@@ -88,21 +103,7 @@ def main():
         model = DenT.DenseTransformer(args)
     else:
         raise NotImplementedError
-    
-    # """ show `nvidia-smi` """ # ShangRu_202307_Test
-    # import subprocess
-    # # 要執行的命令
-    # command = "nvidia-smi"
-    # # 使用Popen執行命令，將stdout捕獲到PIPE中
-    # process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    # # 從stdout讀取輸出
-    # output, error = process.communicate()
-    # # 將bytes轉換為字符串
-    # output_str = output.decode('utf-8')
-    # # 輸出結果
-    # print(f"stdout:{output_str}")
-    # print(f"torch.cuda.device_count() = {torch.cuda.device_count()}")
-    
+
     '''Data Parallel'''
     if torch.cuda.device_count() > 1:
         model = torch.nn.DataParallel(model)
@@ -111,7 +112,7 @@ def main():
     ''' Define Loss '''
     criterion = None
     criterion = BCEDiceLoss() #BCEDiceLoss() #nn.CrossEntropyLoss()
- 
+
     ''' Setup Optimizer '''
     optimizer = optim.Adam(model.parameters(),
                            lr=args.lr,
@@ -121,7 +122,7 @@ def main():
     writer = SummaryWriter(os.path.join(args.log_dir, 'Train_info_{}_{}_{}'.format(args.model, args.target_image, seed)))
     
     ''' Train Model '''
-    print('===> Start training ...')
+    print('===> Start training ...\n') # ShangRu_202307_Test
     iters = 0
     best_mIoU = 0
     best_val_loss = 1
@@ -166,6 +167,9 @@ def main():
             print('Epoch [{}]: mean IoU: {}'.format(epoch, mIoU))
             writer.add_scalar('val_loss', val_loss.data.cpu().numpy(), epoch)
             print('Epoch [{}]: validation loss: {}'.format(epoch, val_loss.data.cpu().numpy()))
+            
+            print(); print_nvidia_smi() # ShangRu_202307_Test
+            print("="*80, "\n") # ShangRu_202307_Test
 
             # Save Best Model 
             if val_loss < best_val_loss - 1e-4:
