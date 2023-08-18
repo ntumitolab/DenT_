@@ -20,8 +20,8 @@ python "../../train.py" \
     --lr 2e-4 \
     --weight_decay 5e-4 \
     --model "DenT" \
-    --log_dir "../logs/" \
-    --checkpoints "../checkpoints/" \
+    --log_dir "./logs/" \
+    --checkpoints "./checkpoints/" \
     --random_seed 123 \
     
     # --deep_supervision \
