@@ -1,3 +1,6 @@
 __pycache__
 
 data/{DataSet}_DenT
+ShangRu_202307_Test/**/*.tif
+
+*.tar
