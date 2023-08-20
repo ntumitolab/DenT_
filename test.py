@@ -10,6 +10,8 @@ from utils import *
 import torch.nn as nn
 import torch.nn.functional as F
 
+from ShangRu_202307_Test.utils import print_nvidia_smi
+
 def reconstruct(pred, seg):
     pred_patch, seg_patch, new_preds, new_segs = list(),list(),list(),list()
     for i in range(len(pred)):
@@ -133,3 +135,5 @@ if __name__ == '__main__':
     iou, loss = evaluate(args, model, test_loader, save_img=True)
     print('Testing iou: {}'.format(iou))
     print('Testing loss: {}'.format(loss))
+    
+    print(); print_nvidia_smi() # ShangRu_202307_Test
