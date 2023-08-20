@@ -14,6 +14,6 @@ python "../../test.py" \
     --model "DenT" \
     --checkpoints "./checkpoints/[xxxxxx]" \
     --random_seed 123 \
-    --seg_dir "./seg_results/" \
+    --seg_dir "./seg_results/[xxxxxx]" \
 
     # --patch \ # KiUnet parameters
