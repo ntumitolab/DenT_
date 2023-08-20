@@ -102,14 +102,15 @@ if __name__ == '__main__':
     assert seed == 15725 # ShangRu_202307_Test
 
     ''' setup GPU '''
-    torch.cuda.set_device(args.gpu)
-    torch.cuda.empty_cache() # ShangRu_202307_Test
+    # torch.cuda.set_device(args.gpu) # ShangRu_202307_Test
+    # torch.cuda.empty_cache() # ShangRu_202307_Test
     
     ''' prepare data_loader '''
     print('===> prepare data loader ...')
     test_loader = torch.utils.data.DataLoader(data.SegDataset(args, mode='test'),
                                          batch_size=args.test_batch,
                                          num_workers=args.workers,
+                                         pin_memory=True, # ShangRu_202307_Test
                                          shuffle=False)
     
     ''' prepare best model for visualization and evaluation '''
@@ -117,11 +118,12 @@ if __name__ == '__main__':
     if args.model == 'DenT':
         model = DenT.DenseTransformer(args)
     else:
-        raise NotImplementedError    
+        raise NotImplementedError
 
+    '''Data Parallel'''
     if torch.cuda.device_count() > 1:
         model = torch.nn.DataParallel(model)
-    model.cuda()            
+    model.cuda()
     
     best_model_path = Path(os.path.join(args.checkpoints,
                                         # '{}_{}_{}'.format(args.model, args.target_image, seed),
