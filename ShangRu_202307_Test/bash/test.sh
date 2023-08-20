@@ -12,8 +12,8 @@ python "../../test.py" \
     --gpu 0 \
     --test_batch 1 \
     --model "DenT" \
-    --checkpoints "../checkpoints/DenT_target_15725" \
+    --checkpoints "./checkpoints/[xxxxxx]" \
     --random_seed 123 \
-    --seg_dir "../seg_results/" \
+    --seg_dir "./seg_results/" \
 
     # --patch \ # KiUnet parameters
