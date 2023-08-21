@@ -11,8 +11,8 @@
 #SBATCH --mail-user="rime97410000@gmail.com"
 
 # training parameters are mentioned in paper ( B. Implementation Details )
-#
-# --target_image "" \  # predict objects: target, target_dna
+# 
+# --target_image "" \    # predict objects: target, target_dna
 
 module purge
 module load miniconda3
