@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=DenT_test    ## job name
+#SBATCH --job-name=DenT-target-train    ## job name
 #SBATCH --nodes=1                ## 索取 1 節點
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8       ## 該 task 索取 32 CPUs
