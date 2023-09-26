@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=DenT-target-train    ## job name
+#SBATCH --job-name=DenT_[target]_train    ## job name
 #SBATCH --nodes=1                ## 索取 1 節點
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8       ## 該 task 索取 32 CPUs
@@ -20,8 +20,10 @@
 
 module purge
 module load miniconda3
-conda activate "DenT-tensorboard"
+conda activate "DenT-tensorboard-py310"
 cd "/home/twsqzqy988/DenT/ShangRu_202307_Test/slurm"
+
+export CUBLAS_WORKSPACE_CONFIG=:4096:8 # torch.use_deterministic_algorithms(True)
 
 python "../../train.py" \
     --data_path "../../data/{DataSet}_DenT/" \
