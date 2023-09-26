@@ -12,7 +12,7 @@
 
 # training parameters are mentioned in paper ( B. Implementation Details )
 # 
-# --target_image "" \    # predict objects: target, target_dna
+# --target_image "" \    # predict targets: target / target_dna
 # --epoch 200 \          # The number of training iterations is approximately 10,000 (200 epochs).
 # --train_batch 2 \      # During the training progress, the batch size is 2 unless otherwise specified.
 # --lr 2e-4 \            # The models are trained using the Adam optimizer with a learning rate of 2e-4 and weight decay of 5e-4.
