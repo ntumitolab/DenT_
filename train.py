@@ -1,22 +1,25 @@
 import os
+import torch
+
 import argparse
+import DenT
+import data
 
 import numpy as np
-import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from tensorboardX import SummaryWriter
 
-import data
-import DenT
+from tensorboardX import SummaryWriter
 from test import evaluate
 from utils import BCEDiceLoss
-from ShangRu_202307_Test.utils import print_nvidia_smi, \
-    set_reproducibility, seed_worker
 
 import warnings
 warnings.filterwarnings("ignore", '.*output shape of zoom.*')
+
+from ShangRu_202307_Test.utils import print_nvidia_smi, \
+    set_reproducibility, seed_worker # ShangRu_202307_Test
+# -----------------------------------------------------------------------------/
 
 def save_model(model, save_path):
     torch.save(model.state_dict(), save_path)
@@ -56,14 +59,14 @@ def main():
         os.makedirs(args.checkpoints)
 
     ''' Setup GPU '''
-    # torch.cuda.set_device(args.gpu) # ShangRu_202307_Test
+    torch.cuda.set_device(args.gpu)
     # torch.cuda.empty_cache() # ShangRu_202307_Test
 
     ''' Setup Random Seed '''
     set_reproducibility(args.random_seed) # ShangRu_202307_Test
     g = torch.Generator() # ShangRu_202307_Test
     g.manual_seed(0) # ShangRu_202307_Test
-    seed = np.random.randint(100000) # ShangRu_202307_Test
+    seed = np.random.randint(100000)
 
     if not os.path.exists(os.path.join(args.checkpoints, '{}_{}_{}'.format(args.model, args.target_image, seed))):
         os.makedirs(os.path.join(args.checkpoints, '{}_{}_{}'.format(args.model, args.target_image, seed)))
@@ -117,8 +120,8 @@ def main():
     best_val_loss = 1
     for epoch in range(1, args.epoch + 1):
         model.train()
-        for idx, (img_id, imgs, segs) in enumerate(train_loader): # ShangRu_202307_Test
-            train_info = 'Epoch: [{0}][{1}/{2}], [{3}]'.format(epoch, idx+1, len(train_loader), img_id) # ShangRu_202307_Test
+        for idx, (img_ids, imgs, segs) in enumerate(train_loader): # ShangRu_202307_Test
+            train_info = 'Epoch: [{0}][{1}/{2}], [{3}]'.format(epoch, idx+1, len(train_loader), img_ids) # ShangRu_202307_Test
             iters += 1
 
             if args.patch == True:
@@ -177,3 +180,4 @@ def main():
 
 if __name__ == '__main__':
 	main()
+ 
