@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=DenT-target-test    ## job name
+#SBATCH --job-name=DenT_[target]_test    ## job name
 #SBATCH --nodes=1                ## 索取 1 節點
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8       ## 該 task 索取 32 CPUs
@@ -12,22 +12,24 @@
 
 # training parameters are mentioned in paper ( B. Implementation Details )
 # 
-# --target_image "" \    # predict objects: target, target_dna
+# --target_image "[target]" \   # [target] : target / target_dna
 
 module purge
 module load miniconda3
-conda activate "DenT-tensorboard"
+conda activate "DenT-tensorboard-py310"
 cd "/home/twsqzqy988/DenT/ShangRu_202307_Test/slurm"
+
+export CUBLAS_WORKSPACE_CONFIG=:4096:8 # torch.use_deterministic_algorithms(True)
 
 python "../../test.py" \
     --data_path "../../data/{DataSet}_DenT/" \
-    --target_image "target" \
+    --target_image "[target]" \
     --source_image "source" \
     --gpu 0 \
     --test_batch 1 \
     --model "DenT" \
-    --checkpoints "./checkpoints/[xxxxxx]" \
+    --checkpoints "./checkpoints/[record_dir]" \
     --random_seed 123 \
-    --seg_dir "./seg_results/[xxxxxx]" \
+    --seg_dir "./seg_results/[record_dir]" \
 
     # --patch \ # KiUnet parameters
