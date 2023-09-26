@@ -10,7 +10,8 @@ from utils import *
 import torch.nn as nn
 import torch.nn.functional as F
 
-from ShangRu_202307_Test.utils import print_nvidia_smi
+from ShangRu_202307_Test.utils import print_nvidia_smi, \
+    set_reproducibility, seed_worker
 
 def reconstruct(pred, seg):
     pred_patch, seg_patch, new_preds, new_segs = list(),list(),list(),list()
@@ -99,9 +100,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # seed = 15725 #random_seed: 123 >> 15725
-    # np.random.seed(args.random_seed) # ShangRu_202307_Test
-    # seed = np.random.randint(100000) # ShangRu_202307_Test
-    # assert seed == 15725 # ShangRu_202307_Test
+    set_reproducibility(args.random_seed) # ShangRu_202307_Test
+    seed = np.random.randint(100000) # ShangRu_202307_Test
+    assert seed == 15725 # ShangRu_202307_Test
 
     ''' setup GPU '''
     # torch.cuda.set_device(args.gpu) # ShangRu_202307_Test
