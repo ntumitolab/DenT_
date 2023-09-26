@@ -1,5 +1,4 @@
 import os 
-from pathlib import Path # ShangRu_202307_Test
 import torch
 import tifffile
 
@@ -10,8 +9,10 @@ from utils import *
 import torch.nn as nn
 import torch.nn.functional as F
 
+from pathlib import Path # ShangRu_202307_Test
 from ShangRu_202307_Test.utils import print_nvidia_smi, \
-    set_reproducibility, seed_worker
+    set_reproducibility, seed_worker # ShangRu_202307_Test
+# -----------------------------------------------------------------------------/
 
 def reconstruct(pred, seg):
     pred_patch, seg_patch, new_preds, new_segs = list(),list(),list(),list()
@@ -93,19 +94,19 @@ if __name__ == '__main__':
     parser.add_argument('--test_batch', default=1, type=int)
     parser.add_argument('--model', type=str, default='DenT')
     parser.add_argument('--checkpoints', type=str, default='checkpoints')
-    parser.add_argument('--random_seed', type=int, default=123)
+    parser.add_argument('--random_seed', type=int, default=123) # ShangRu_202307_Test
     parser.add_argument('--seg_dir', type=str, default='seg_results')
     parser.add_argument('--patch', type=bool, default=False)
 
     args = parser.parse_args()
 
-    # seed = 15725 #random_seed: 123 >> 15725
+    # seed = 15725 #random_seed: 123 >> 15725 # ShangRu_202307_Test
     set_reproducibility(args.random_seed) # ShangRu_202307_Test
     seed = np.random.randint(100000) # ShangRu_202307_Test
     assert seed == 15725 # ShangRu_202307_Test
 
     ''' setup GPU '''
-    # torch.cuda.set_device(args.gpu) # ShangRu_202307_Test
+    torch.cuda.set_device(args.gpu)
     # torch.cuda.empty_cache() # ShangRu_202307_Test
     
     ''' prepare data_loader '''
@@ -128,9 +129,9 @@ if __name__ == '__main__':
         model = torch.nn.DataParallel(model)
     model.cuda()
     
-    best_model_path = Path(os.path.join(args.checkpoints,
-                                        # '{}_{}_{}'.format(args.model, args.target_image, seed),
-                                        'model_{}_best_pth.tar'.format(args.model))) # ShangRu_202307_Test
+    best_model_path = Path(os.path.join(args.checkpoints, # ShangRu_202307_Test
+                                        # '{}_{}_{}'.format(args.model, args.target_image, seed), # ShangRu_202307_Test
+                                        'model_{}_best_pth.tar'.format(args.model)))
     best_checkpoint = torch.load(best_model_path); print(f"load model : {best_model_path.resolve()}") # ShangRu_202307_Test
     model.load_state_dict(best_checkpoint)
     iou, loss = evaluate(args, model, test_loader, save_img=True)
