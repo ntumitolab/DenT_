@@ -48,9 +48,9 @@ def iou_score(output, target):
 
     return iou
 
-def mean_iou_score(pred, labels, num_classes=1):
-    '''
-    Compute mean IoU score over 9 classes
+def mean_iou_score(pred, labels, num_classes):
+    ''' Compute mean IoU score over classes
+        - `class #0 = background`
     '''
     mean_iou = 0
     for i in range(num_classes):
@@ -63,6 +63,22 @@ def mean_iou_score(pred, labels, num_classes=1):
     print('\nmean_iou: %f\n' % mean_iou)
 
     return mean_iou
+
+def mean_dice(pred, labels, num_classes):
+    ''' Compute dice score over classes
+        - `class #0 = background`
+    '''
+    mean_dice = 0
+    for i in range(num_classes):
+        tp = np.sum((pred == i) * (labels == i))
+        fp = np.sum((pred == i) * (labels != i))
+        fn = np.sum((pred != i) * (labels == i))
+        dice = 2*tp / (2*tp + fn + fp) # f1-score
+        mean_dice += dice / num_classes
+        print('class #%d : %1.5f'%(i, dice))
+    print('\nmean_dice: %f\n' % mean_dice)
+
+    return mean_dice
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
