@@ -44,7 +44,7 @@ def iou_score(output, target):
     intersection = (output_ & target_).sum()
     union = (output_ | target_).sum()
     iou = (intersection + smooth) / (union + smooth)
-    print('mean_iou: %f\n' % iou)
+    print('iou: %f\n' % iou) # ShangRu_202307_Test
 
     return iou
 
