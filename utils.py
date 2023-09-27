@@ -59,8 +59,8 @@ def mean_iou_score(pred, labels, num_classes):
         tp = np.sum((pred == i) * (labels == i))
         iou = tp / (tp_fp + tp_fn - tp)
         mean_iou += iou / num_classes
-        print('class #%d : %1.5f'%(i, iou))
-    print('\nmean_iou: %f\n' % mean_iou)
+        print('|- class #%d : %1.5f'%(i, iou))
+    print('|--> mean_iou: %f\n' % mean_iou)
 
     return mean_iou
 
@@ -75,8 +75,8 @@ def mean_dice(pred, labels, num_classes):
         fn = np.sum((pred != i) * (labels == i))
         dice = 2*tp / (2*tp + fn + fp) # f1-score
         mean_dice += dice / num_classes
-        print('class #%d : %1.5f'%(i, dice))
-    print('\nmean_dice: %f\n' % mean_dice)
+        print('|- class #%d : %1.5f'%(i, dice))
+    print('|--> mean_dice: %f\n' % mean_dice)
 
     return mean_dice
 
