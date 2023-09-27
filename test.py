@@ -77,7 +77,7 @@ def evaluate(args, model, data_loader, save_img=False):
         if not os.path.exists(args.seg_dir):
             os.makedirs(args.seg_dir)
         for img_name, pred in preds_dict.items():
-            tifffile.imsave(os.path.join(args.seg_dir, img_name), (pred*255).astype('uint8'))
+            tifffile.imwrite(os.path.join(args.seg_dir, img_name), (pred*255).astype('uint8'))
 
     return meanIoU, meanloss
 
