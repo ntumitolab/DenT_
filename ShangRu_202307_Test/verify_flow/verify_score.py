@@ -11,7 +11,7 @@ if (abs_module_path.exists()) and (str(abs_module_path) not in sys.path):
     sys.path.append(str(abs_module_path)) # add path to scan customized module
 
 from data import resize_3D
-from utils import iou_score, mean_iou_score
+from utils import mean_iou_score, mean_dice
 # -----------------------------------------------------------------------------/
 
 
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     preds = np.concatenate(pred_img_list)
     gts = np.concatenate(gt_img_list)
     cli_divide_line()
-    meanIoU = iou_score(preds, gts)
     mean_iou_score(preds, gts, num_classes=2)
+    mean_dice(preds, gts, num_classes=2)
     
     sys.exit()
