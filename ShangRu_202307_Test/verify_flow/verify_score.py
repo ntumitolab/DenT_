@@ -11,7 +11,7 @@ if (abs_module_path.exists()) and (str(abs_module_path) not in sys.path):
     sys.path.append(str(abs_module_path)) # add path to scan customized module
 
 from data import resize_3D
-from utils import iou_score
+from utils import iou_score, mean_iou_score
 # -----------------------------------------------------------------------------/
 
 
@@ -63,6 +63,13 @@ def read_and_preprocess_img(img_path:Path, desc:str):
     img = img/255
     desc += " --> range: (0.0, 1.0)"
     
+    """ Convert to binary mask ( threshold = 0.5 ) """
+    """ Due to resize operation (interpolation),
+        some px value may not be 0 or 1 (not a binary image)
+    """
+    img = img > 0.5 # (value > 0.5) = 1, (value <= 0.5) = 0
+    desc += " --> mask (threshold = 0.5)"
+
     """ Dump after preprocess """
     dump_info(img, f">>> {desc}")
     
@@ -105,5 +112,6 @@ if __name__ == '__main__':
     gts = np.concatenate(gt_img_list)
     cli_divide_line()
     meanIoU = iou_score(preds, gts)
+    mean_iou_score(preds, gts, num_classes=2)
     
     sys.exit()
