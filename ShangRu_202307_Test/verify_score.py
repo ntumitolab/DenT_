@@ -8,7 +8,7 @@ import skimage
 
 abs_module_path = Path("/home/twsqzqy988/DenT/").resolve()
 if (abs_module_path.exists()) and (str(abs_module_path) not in sys.path):
-    sys.path.append(str(abs_module_path)) # add path to scan customized module
+    sys.path.insert(0, str(abs_module_path)) # add path to scan customized module
 
 from data import resize_3D
 from utils import mean_iou_score, mean_dice
@@ -81,10 +81,10 @@ def read_and_preprocess_img(img_path:Path, desc:str):
 if __name__ == '__main__':
     
     # pred_dir
-    dent_pred_dir: Path = Path(r"/home/twsqzqy988/DenT/ShangRu_202307_Test/verify_flow/result (NAS, Chan-Min Hsu)/IoU/New Model")
+    dent_pred_dir: Path = Path(r"/work/twsqzqy988/DenT-PaperRevision/seg_results/{external}/result (NAS, Chan-Min Hsu)/IoU/New Model")
     
     # gt_dir
-    dent_gt_dir: Path = Path(r"/home/twsqzqy988/DenT/data/{DataSet}_DenT/test")
+    dent_gt_dir: Path = Path(r"/work/twsqzqy988/DenT-PaperRevision/{DataSet}_DenT/test")
     dent_gt_dir = dent_gt_dir.joinpath("target") # target / target_dna
 
     """ Get paths """
