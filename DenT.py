@@ -27,6 +27,7 @@ class conv_block_nested(nn.Module):
 
         return output
 
+
 class Unet_Block(nn.Module):
     '''Construct the Unet block'''
     def __init__(self):
@@ -68,10 +69,11 @@ class Unet_Block(nn.Module):
 class Embeddings(nn.Module):
     """Construct the embeddings from patch, position embeddings.
     """
-    def __init__(self, img_size):
+    def __init__(self, img_size, add_pos_emb=True):
         super(Embeddings, self).__init__()
         img_size = _pair(img_size)
         filters = [16,8,4,2]
+        self._add_pos_emb = False
 
         patch_size = []
         for i in range(len(filters)):
@@ -88,11 +90,13 @@ class Embeddings(nn.Module):
             nn.Conv3d(in_channels=in_channels, out_channels=out_channels, kernel_size=patch_size, stride=patch_size) for in_channels, out_channels, patch_size in zip(in_channels, out_channels, patch_size)
         ]
         self.patch_embeddings = nn.ModuleList(patch_embedding_blocks)
-        
-        self.position_embeddings1 = nn.Parameter(torch.zeros(1, n_patches, out_channels[0]))
-        self.position_embeddings2 = nn.Parameter(torch.zeros(1, n_patches, out_channels[1]))
-        self.position_embeddings3 = nn.Parameter(torch.zeros(1, n_patches, out_channels[2]))
-        self.position_embeddings4 = nn.Parameter(torch.zeros(1, n_patches, out_channels[3]))
+
+        if add_pos_emb:
+            self.position_embeddings1 = nn.Parameter(torch.zeros(1, n_patches, out_channels[0]))
+            self.position_embeddings2 = nn.Parameter(torch.zeros(1, n_patches, out_channels[1]))
+            self.position_embeddings3 = nn.Parameter(torch.zeros(1, n_patches, out_channels[2]))
+            self.position_embeddings4 = nn.Parameter(torch.zeros(1, n_patches, out_channels[3]))
+            self._add_pos_emb = True
        
         self.dropout = nn.Dropout(p=0.1)
 
@@ -105,13 +109,17 @@ class Embeddings(nn.Module):
             embeddings.append(patch_block(features[i])) # (B, hidden, n_patches^(1/2), n_patches^(1/2), n_patches^(1/2))
             embeddings[i] = embeddings[i].flatten(2) # (B, hidden, DWH/P^3)
             embeddings[i] = embeddings[i].transpose(-1, -2) # (B, n_patches, hidden)
-                        
-        embeddings[0] = self.dropout(embeddings[0] + self.position_embeddings1)
-        embeddings[1] = self.dropout(embeddings[1] + self.position_embeddings2)
-        embeddings[2] = self.dropout(embeddings[2] + self.position_embeddings3)
-        embeddings[3] = self.dropout(embeddings[3] + self.position_embeddings4)
+            if not self._add_pos_emb:
+                embeddings[i] = self.dropout(embeddings[i])
+        
+        if self._add_pos_emb:
+            embeddings[0] = self.dropout(embeddings[0] + self.position_embeddings1)
+            embeddings[1] = self.dropout(embeddings[1] + self.position_embeddings2)
+            embeddings[2] = self.dropout(embeddings[2] + self.position_embeddings3)
+            embeddings[3] = self.dropout(embeddings[3] + self.position_embeddings4)
 
         return embeddings, features[1:]
+
 
 class Mlp(nn.Module):
     def __init__(self, out_channels):
@@ -137,6 +145,7 @@ class Mlp(nn.Module):
         x = self.dropout(x)
         return x
 
+
 class Block(nn.Module):
     def __init__(self, vis, out_channels):
         super(Block, self).__init__()
@@ -156,6 +165,7 @@ class Block(nn.Module):
         x = self.ffn(x)
         x = x + h
         return x, weights
+
 
 class Encoder(nn.Module):
     def __init__(self, vis, out_channels):
@@ -177,15 +187,15 @@ class Encoder(nn.Module):
         encoded = self.encoder_norm(hidden_states)
         return encoded, attn_weights
 
+
 class Transformer(nn.Module):
     def __init__(self, img_size, vis):
         super(Transformer, self).__init__()
         self.embeddings = Embeddings(img_size=img_size)
         
         out_channels = [768, 384, 192, 96]
-        encoder_blocks = [Encoder(vis, out_channels) for out_channels in out_channels]
+        encoder_blocks = [Encoder(vis, o_ch) for o_ch in out_channels]
         self.encoder = nn.ModuleList(encoder_blocks)
-
 
     def forward(self, input_ids):
         encoded = []
@@ -197,6 +207,7 @@ class Transformer(nn.Module):
             attn_weights.append(y)
             
         return encoded, attn_weights, features
+
 
 class DecoderCup(nn.Module):
     def __init__(self):
@@ -274,12 +285,14 @@ class DecoderCup(nn.Module):
 
         return out
 
+
 class SegmentationHead(nn.Sequential):
 
     def __init__(self, in_channels, out_channels, kernel_size=3, upsampling=1):
         conv3d = nn.Conv3d(in_channels, out_channels, kernel_size=kernel_size, padding=kernel_size // 2)
         upsampling = nn.Upsample(scale_factor=upsampling, mode='trilinear', align_corners=True) if upsampling > 1 else nn.Identity()
         super().__init__(conv3d, upsampling)
+
 
 class DenseTransformer(nn.Module):
     def __init__(self, args, img_size=[32,256,256], zero_head=False, vis=False):
@@ -298,5 +311,41 @@ class DenseTransformer(nn.Module):
             x = x.repeat(1,3,1,1,1)
         x, attn_weights, features = self.transformer(x)  # (B, n_patch, hidden)
         x = self.decoder(x, features)
+        logits = self.segmentation_head(x)
+        return logits
+
+
+class CustomizableDenT(nn.Module):
+    def __init__(self, 
+                 img_size=[32,256,256], 
+                 out_channels=None, 
+                 use_multiheads=None, 
+                 return_weights=False,
+                 add_pos_emb=True):
+        if out_channels is None:
+            out_channels = [768, 384, 192, 96]
+            use_multiheads = [True, True, True, True]
+
+        self.embeddings = Embeddings(img_size=img_size, add_pos_emb=add_pos_emb)
+        encoder_blocks = [Encoder(return_weights, o_ch) if use_multiheads[i] else None
+                          for i, o_ch in enumerate(out_channels)]
+        self.encoder = nn.ModuleList(encoder_blocks)
+
+    def forward(self, x):
+        if x.size()[1] == 1:
+            x = x.repeat(1,3,1,1,1)
+        embedding_output, features = self.embeddings(x)
+        encoded = []
+        attn_weights = []
+        for i, encoder in enumerate(self.encoder):
+            if encoder is None:
+                encoded.append(embedding_output[i])
+                attn_weights.append(None)
+                continue
+            x, y = encoder(embedding_output[i]) # (B, n_patch, hidden)
+            encoded.append(x)
+            attn_weights.append(y)
+
+        x = self.decoder(encoded, features)
         logits = self.segmentation_head(x)
         return logits
