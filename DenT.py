@@ -324,7 +324,11 @@ class CustomizableDenT(nn.Module):
                  add_pos_emb=True):
         if out_channels is None:
             out_channels = [768, 384, 192, 96]
-            use_multiheads = [True, True, True, True]
+
+        if use_multiheads is None:
+            use_multiheads = [True for _ in range(len(out_channels))]
+
+        assert len(out_channels) == len(use_multiheads), f"The length of out_channels ({len(out_channels)}) must matches the length of use_multiheads ({len(use_multiheads)})"
 
         self.embeddings = Embeddings(img_size=img_size, add_pos_emb=add_pos_emb)
         encoder_blocks = [Encoder(return_weights, o_ch) if use_multiheads[i] else None

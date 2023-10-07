@@ -45,6 +45,8 @@ def main():
     parser.add_argument('--checkpoints', type=str, default='checkpoints')
     parser.add_argument('--random_seed', type=int, default=123)
     parser.add_argument('--seg_dir', type=str, default='seg_results') # ShangRu_202307_Test
+    parser.add_argument('--add_pos_emb', action=argparse.BooleanOptionalAction)
+    parser.add_argument('--use_multiheads', nargs='+', type=int, default=[1, 1, 1, 1])
 
     # deep supervision
     parser.add_argument('--deep_supervision', type=bool, default=False)
@@ -93,6 +95,9 @@ def main():
     model = None
     if args.model == 'DenT':
         model = DenT.DenseTransformer(args)
+    elif args.model == 'CusDenT':
+        model = DenT.CustomizableDenT(add_pos_emb=args.add_pos_emb,
+                                      use_multiheads=[bool(m) for m in args.use_multiheads])
     else:
         raise NotImplementedError
 
