@@ -9,9 +9,17 @@ from utils import *
 import torch.nn as nn
 import torch.nn.functional as F
 
-from pathlib import Path # ShangRu_202307_Test
-from ShangRu_202307_Test.utils import print_nvidia_smi, \
-    set_reproducibility, seed_worker # ShangRu_202307_Test
+# ShangRu_202307_Test
+import sys
+from pathlib import Path
+from datetime import datetime
+
+abs_module_path = Path("/work/twsqzqy988/DenT-PaperRevision").resolve()
+if (abs_module_path.exists()) and (str(abs_module_path) not in sys.path):
+    sys.path.insert(0, str(abs_module_path)) # add path to scan customized module
+
+from misc_utils import print_nvidia_smi, \
+    set_reproducibility, seed_worker, get_args, set_args_dirs, load_config
 # -----------------------------------------------------------------------------/
 
 def reconstruct(pred, seg):
@@ -79,38 +87,36 @@ def evaluate(args, model, data_loader, save_img=False):
         for img_name, pred in preds_dict.items():
             tifffile.imwrite(os.path.join(args.seg_dir, img_name), (pred*255).astype('uint8'))
 
+
     return meanIoU, meanloss
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Mito-Net')
-    # Datasets Parameters
-    parser.add_argument('--data_path', type=str, default='data/Z_stack_2D', help="root path to data directory")
-    parser.add_argument('--workers', type=int, default=4, help="number of data loading workers")
-    parser.add_argument('--target_image', type=str, default='Mito', help='which target to be predicted')
-    parser.add_argument('--source_image', type=str, default='TL', help='which source to be trained')
+    
+    args = get_args("test")  # ShangRu_202307_Test
 
-    # Testing parameters
-    parser.add_argument('--gpu', default=0, type=int)
-    parser.add_argument('--test_batch', default=1, type=int)
-    parser.add_argument('--model', type=str, default='DenT')
-    parser.add_argument('--checkpoints', type=str, default='checkpoints')
-    parser.add_argument('--random_seed', type=int, default=123) # ShangRu_202307_Test
-    parser.add_argument('--seg_dir', type=str, default='seg_results')
-    parser.add_argument('--patch', type=bool, default=False)
+    ''' Setup GPU '''
+    # torch.cuda.set_device(args.gpu)
+    torch.cuda.empty_cache() # ShangRu_202307_Test
 
-    args = parser.parse_args()
-
-    # seed = 15725 #random_seed: 123 >> 15725 # ShangRu_202307_Test
+    ''' Setup Random Seed '''
     set_reproducibility(args.random_seed) # ShangRu_202307_Test
     seed = np.random.randint(100000) # ShangRu_202307_Test
     assert seed == 15725 # ShangRu_202307_Test
-
-    ''' setup GPU '''
-    torch.cuda.set_device(args.gpu)
-    # torch.cuda.empty_cache() # ShangRu_202307_Test
     
-    ''' prepare data_loader '''
-    print('===> prepare data loader ...')
+    ''' Set dirs '''
+    set_args_dirs(args, seed, "test") # ShangRu_202307_Test
+    time_stamp: str = datetime.now().strftime('%Y%m%d_%H_%M_%S')
+    print(f"datetime: {time_stamp}\n")
+    
+    ''' Retrieve params of `CusDenT` from `args.toml` '''
+    found_list = list(Path(args.log_dir).glob("*_args.toml"))
+    assert len(found_list) == 1, "`args.toml` is not unique !!!"
+    args_config = load_config(found_list[0])
+    args.use_multiheads = args_config["use_multiheads"]
+    args.add_pos_emb = args_config["add_pos_emb"]
+    
+    ''' Load Dataset and Prepare Dataloader '''
+    print('===> Preparing dataloader ... ')
     test_loader = torch.utils.data.DataLoader(data.SegDataset(args, mode='test'),
                                          batch_size=args.test_batch,
                                          num_workers=args.workers,
@@ -118,9 +124,13 @@ if __name__ == '__main__':
                                          shuffle=False)
     
     ''' prepare best model for visualization and evaluation '''
+    print('===> Preparing model ...')
     model = None
     if args.model == 'DenT':
         model = DenT.DenseTransformer(args)
+    elif args.model == 'CusDenT':
+        model = DenT.CustomizableDenT(add_pos_emb=args.add_pos_emb,
+                                      use_multiheads=[bool(m) for m in args.use_multiheads])
     else:
         raise NotImplementedError
 
@@ -129,13 +139,12 @@ if __name__ == '__main__':
         model = torch.nn.DataParallel(model)
     model.cuda()
     
-    best_model_path = Path(os.path.join(args.checkpoints, # ShangRu_202307_Test
-                                        # '{}_{}_{}'.format(args.model, args.target_image, seed), # ShangRu_202307_Test
-                                        'model_{}_best_pth.tar'.format(args.model)))
+    best_model_path = Path(args.checkpoints).joinpath(f"model_{args.model}_best_pth.tar") # ShangRu_202307_Test
     best_checkpoint = torch.load(best_model_path); print(f"load model : {best_model_path.resolve()}") # ShangRu_202307_Test
     model.load_state_dict(best_checkpoint)
     iou, loss = evaluate(args, model, test_loader, save_img=True)
     print('Testing iou: {}'.format(iou))
     print('Testing loss: {}'.format(loss))
-    
-    print(); print_nvidia_smi() # ShangRu_202307_Test
+    print()
+    print_nvidia_smi() # ShangRu_202307_Test
+    # -------------------------------------------------------------------------/
