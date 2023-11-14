@@ -322,6 +322,8 @@ class CustomizableDenT(nn.Module):
                  use_multiheads=None, 
                  return_weights=False,
                  add_pos_emb=True):
+        super().__init__()
+        
         if out_channels is None:
             out_channels = [768, 384, 192, 96]
 
@@ -334,6 +336,13 @@ class CustomizableDenT(nn.Module):
         encoder_blocks = [Encoder(return_weights, o_ch) if use_multiheads[i] else None
                           for i, o_ch in enumerate(out_channels)]
         self.encoder = nn.ModuleList(encoder_blocks)
+        
+        self.decoder = DecoderCup()
+        self.segmentation_head = SegmentationHead(
+            in_channels=16,
+            out_channels=1,
+            kernel_size=3,
+        )
 
     def forward(self, x):
         if x.size()[1] == 1:
