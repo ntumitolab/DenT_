@@ -86,7 +86,7 @@ def main():
 
     ''' Define Loss '''
     criterion = None
-    criterion = BCEDiceLoss() #BCEDiceLoss() #nn.CrossEntropyLoss()
+    criterion = BCEDiceLoss() #nn.BCEWithLogitsLoss() #BCEDiceLoss() #nn.CrossEntropyLoss()
 
     ''' Setup Optimizer '''
     optimizer = optim.Adam(model.parameters(),

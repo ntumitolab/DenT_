@@ -42,7 +42,7 @@ def evaluate(args, model, data_loader, save_img=False):
     gts_dict = dict()
 
     criterion = None
-    criterion = BCEDiceLoss()
+    criterion = BCEDiceLoss() #nn.BCEWithLogitsLoss() #BCEDiceLoss()
     loss = 0
     count = 0
 
@@ -109,11 +109,12 @@ if __name__ == '__main__':
     print(f"datetime: {time_stamp}\n")
     
     ''' Retrieve params of `CusDenT` from `args.toml` '''
-    found_list = list(Path(args.log_dir).glob("*_args.toml"))
-    assert len(found_list) == 1, "`args.toml` is not unique !!!"
-    args_config = load_config(found_list[0])
-    args.use_multiheads = args_config["use_multiheads"]
-    args.add_pos_emb = args_config["add_pos_emb"]
+    if args.model == "CusDenT":
+        found_list = list(Path(args.log_dir).glob("*_args.toml"))
+        assert len(found_list) == 1, "`args.toml` is not unique !!!"
+        args_config = load_config(found_list[0])
+        args.use_multiheads = args_config["use_multiheads"]
+        args.add_pos_emb = args_config["add_pos_emb"]
     
     ''' Load Dataset and Prepare Dataloader '''
     print('===> Preparing dataloader ... ')
