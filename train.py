@@ -22,10 +22,6 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
-abs_module_path = Path("/work/twsqzqy988/DenT-PaperRevision").resolve()
-if (abs_module_path.exists()) and (str(abs_module_path) not in sys.path):
-    sys.path.insert(0, str(abs_module_path)) # add path to scan customized module
-
 from misc_utils import print_nvidia_smi, \
     set_reproducibility, seed_worker, get_args, set_args_dirs, dump_config
 # -----------------------------------------------------------------------------/
