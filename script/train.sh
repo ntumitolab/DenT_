@@ -15,7 +15,7 @@ python "../train.py" \
     --target_image "$target" \
     --source_image "source" \
     --gpu 0 \
-    --epoch 2 \
+    --epoch 200 \
     --val_epoch 1 \
     --train_batch 2 \
     --lr 2e-4 \
