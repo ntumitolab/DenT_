@@ -178,3 +178,18 @@ def load_config(path:Path, reserve_comment:bool=False) -> Union[dict, TOMLDocume
     
     return config
     # -------------------------------------------------------------------------/
+
+
+
+def get_score_args():
+    """ DenT & MitoPrediction input args
+    """
+    parser = argparse.ArgumentParser(description="Calculate 'IoU' and 'Dice' score")
+    
+    parser.add_argument('--seg_results', type=str, required=True, help="path to 'seg_results' under each result folder")
+    parser.add_argument('--dent_seg_gt', type=str, required=True, help="path to ground-truth of 'DenT' segmentation")
+    
+    args = parser.parse_args()
+    
+    return args
+    # -------------------------------------------------------------------------/
