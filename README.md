@@ -134,6 +134,19 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
     bash calcu_score.sh
     ```
 
+5. Checkout the score
+
+    ```shell
+    ============================================================
+    |- class #0 : 0.92224
+    |- class #1 : 0.44280
+    |--> mean_iou: 0.682518
+
+    |- class #0 : 0.95955
+    |- class #1 : 0.61381 <--- Dice score of *target*
+    |--> mean_dice: 0.786676
+    ```
+
 ## Reference
 
 - [Google ViT](https://github.com/google-research/vision_transformer)
