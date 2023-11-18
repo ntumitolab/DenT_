@@ -19,7 +19,7 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
 ## Data
 
 1. Data is currently available [here](https://drive.google.com/drive/folders/10LJxPudM3GWgYvN6Rz-DhLWFRMt4WJLD?usp=sharing)
-2. Unzip to the `./data/` directory, you should see data inside `./data/DenT/`
+2. Create a new directory `DenT` under `./data/`, and put the Data to `./data/DenT/`
 
 - If you want to train with your own data, please put your dataset `***` inside `./data/`. target dataset and source dataset should be named as `./data/***/train/target`and`./data/***/train/source`.
 - Create your own testing set and validation set by running the following script:
@@ -29,6 +29,10 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
     ```
 
 - you should now see 3 folders inside the `./data/***` (train, test, val), each consists of the folder `target` and `source`.
+
+## Results
+
+2. Unzip it to the root of this repository, the directory will be used for storing the training results and as a variable `result_root` introduced in the next section (`result_root = ./results`)
 
 ## Train
 
