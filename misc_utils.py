@@ -67,7 +67,7 @@ def get_args(mode):
     parser = argparse.ArgumentParser(description='DenT-PaperRevision')
     
     """ Datasets Parameters """
-    parser.add_argument('--data_path', type=str, default=r'/work/twsqzqy988/DenT-PaperRevision/{DataSet}_DenT', help="root path to data directory")
+    parser.add_argument('--data_path', type=str, required=True, help="root path to data directory")
     parser.add_argument('--workers', type=int, default=4, help="number of data loading workers")
     parser.add_argument('--target_image', type=str, default='target', help='which target to be predicted')
     parser.add_argument('--source_image', type=str, default='source', help='which source to be trained')
@@ -86,11 +86,8 @@ def get_args(mode):
 
     parser.add_argument('--model', type=str, default='CusDenT')
     parser.add_argument('--image_type', type=str, default='3D')
-    parser.add_argument('--result_dir', type=str, default="/work/twsqzqy988/DenT-PaperRevision/results")
+    parser.add_argument('--result_dir', type=str, required=True)
     parser.add_argument('--random_seed', type=int, default=123)
-    # parser.add_argument('--log_dir', type=str, default='/work/twsqzqy988/DenT-PaperRevision/logs')
-    # parser.add_argument('--checkpoints', type=str, default='/work/twsqzqy988/DenT-PaperRevision/checkpoints')
-    # parser.add_argument('--seg_dir', type=str, default='/work/twsqzqy988/DenT-PaperRevision/seg_results')
 
     # DenT-PaperRevision ( reviewer's comment )
     parser.add_argument('--use_multiheads', nargs='+', type=int, default=[1, 1, 1, 1])
