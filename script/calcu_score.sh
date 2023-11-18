@@ -1,7 +1,7 @@
 #!/bin/bash
 
-module purge
-module load miniconda3
+# module purge
+# module load miniconda3
 conda activate "DenT-tensorboard-py310"
 
 # variables
