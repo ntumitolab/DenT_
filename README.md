@@ -43,17 +43,23 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
     ```
 
 2. Modify `target` and `model` variables (`--random_seed` and `--use_multiheads` are the arguments for `CusDenT`)
-3. Run `train.sh`
+3. Go to `Line 5` and replace the environment name
+
+    ```bash
+    conda activate "[your environment]"
+    ```
+
+4. Run `train.sh`
 
     ``` shell
     cd script
     bash train.sh
     ```
 
-4. After training progress, you should see the results looks like the following structure
+5. After the training progress, you should see the `result_dir` looks like the following structure
 
     ```txt
-    results/[target]/[model]_[target]_3D_15725_[n]
+    results/[target]/[model]_[target]_3D_15725_[num]
      |
      | --- checkpoints
      |  | --- model_CusDenT_[n]_pth.tar
@@ -83,17 +89,23 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
 
 2. Modify `record_dir`, `target` and `model` variables
 
-   - `record_dir` should be `[model]_[target]_3D_15725_[n]`
+   - `record_dir` should be `[model]_[target]_3D_15725_[num]`
    - `target` and `model` should match to `record_dir`
 
-3. Run `test.sh`
+3. Go to `Line 5` and replace the environment name
+
+    ```bash
+    conda activate "[your environment]"
+    ```
+
+4. Run `test.sh`
 
     ``` shell
     cd script
     bash test.sh
     ```
 
-4. Now, there should be some images generated in `seg_results` directory
+5. After the process, you can find that predict images is generated in `seg_results/` directory under `[model]_[target]_3D_15725_[num]/`
 
 ## Evaluate Model Performance
 
@@ -108,8 +120,14 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
     record_dir="CusDenT_target_3D_15725_1" # change result dir
     ```
 
-2. Let variables section as same as in `test.sh`
-3. Run `calcu_score.sh`
+2. Set variables as same as those in `test.sh`
+3. Go to `Line 5` and replace the environment name
+
+    ```bash
+    conda activate "[your environment]"
+    ```
+
+4. Run `calcu_score.sh`
 
     ``` shell
     cd script
