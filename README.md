@@ -32,7 +32,7 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
 
 ## Results
 
-1. Download the results from [here](https://gofile.me/7472U/GFSZV21mu)
+1. Download the results from [here](https://gofile.me/7472U/P7jboFktj)
 2. Move the `checkpoints` directory according to the structure of `./results`, `./results` is used to store the training results and as a variable `result_root` introduced in the next section (`result_root = ./results`)
 
 ## Train
