@@ -157,7 +157,7 @@ tensorboard --logdir . --port [port_num]
     |--> mean_iou: 0.682518
 
     |- class #0 : 0.95955
-    |- class #1 : 0.61381 <--- Dice score of *target*
+    |- class #1 : 0.61381 <--- Dice score of [target]
     |--> mean_dice: 0.786676
     ```
 
