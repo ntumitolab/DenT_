@@ -112,6 +112,15 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
 
 5. After the process, you can find that predict images is generated in `seg_results/` directory under `[model]_[target]_3D_15725_[num]/`
 
+## Training Progress visualization
+
+If `tensorboard` is installed, you can see the training progress with following actions
+
+```shell
+cd results
+tensorboard --logdir . --port [port_num]
+```
+
 ## Evaluate Model Performance
 
 1. Open `./script/calcu_score.sh`, and find the section below
