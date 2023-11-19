@@ -11,10 +11,10 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
 - Recommend: Install [Miniconda](https://conda.io/miniconda.html) for environment control.
 - Create a Conda environment for the platform:
 
-  ``` shell
-  python=3.10
-  torch=1.13.1+cu116
-  ```
+    ```shell
+    python=3.10
+    torch=1.13.1+cu116
+    ```
 
 ## Data
 
@@ -32,7 +32,8 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
 
 ## Results
 
-2. Unzip it to the root of this repository, the directory will be used for storing the training results and as a variable `result_root` introduced in the next section (`result_root = ./results`)
+1. Download the result from [here](https://gofile.me/7472U/KaemaofKo)
+2. Move the `checkpoints` directory according to the structure of `./results`, `./results` is used to store the training results and as a variable `result_root` introduced in the next section (`result_root = ./results`)
 
 ## Train
 
@@ -55,7 +56,7 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
 
 4. Run `train.sh`
 
-    ``` shell
+    ```shell
     cd script
     bash train.sh
     ```
@@ -104,7 +105,7 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
 
 4. Run `test.sh`
 
-    ``` shell
+    ```shell
     cd script
     bash test.sh
     ```
@@ -133,7 +134,7 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
 
 4. Run `calcu_score.sh`
 
-    ``` shell
+    ```shell
     cd script
     bash calcu_score.sh
     ```
