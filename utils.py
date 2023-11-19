@@ -4,7 +4,7 @@ import argparse
 import os
 import glob
 import torch
-import torch.nn as nn # ShangRu_202307_Test
+import torch.nn as nn # 
 import torch.nn.functional as F
 
 class BCEDiceLoss(nn.Module):
@@ -44,7 +44,7 @@ def iou_score(output, target):
     intersection = (output_ & target_).sum()
     union = (output_ | target_).sum()
     iou = (intersection + smooth) / (union + smooth)
-    print('iou: %f\n' % iou) # ShangRu_202307_Test
+    print('iou: %f\n' % iou) # 
 
     return iou
 

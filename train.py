@@ -17,7 +17,7 @@ from utils import BCEDiceLoss
 import warnings
 warnings.filterwarnings("ignore", '.*output shape of zoom.*')
 
-# ShangRu_202307_Test
+# 
 import sys
 from pathlib import Path
 from datetime import datetime
@@ -31,37 +31,37 @@ def save_model(model, save_path):
 
 def main():
     
-    args = get_args("train")  # ShangRu_202307_Test
+    args = get_args("train")  # 
 
     ''' Setup GPU '''
     # torch.cuda.set_device(args.gpu)
-    torch.cuda.empty_cache() # ShangRu_202307_Test
+    torch.cuda.empty_cache() # 
 
     ''' Setup Random Seed '''
-    set_reproducibility(args.random_seed) # ShangRu_202307_Test
-    g = torch.Generator() # ShangRu_202307_Test
-    g.manual_seed(0) # ShangRu_202307_Test
+    set_reproducibility(args.random_seed) # 
+    g = torch.Generator() # 
+    g.manual_seed(0) # 
     seed = np.random.randint(100000)
 
     ''' Set dirs '''
-    set_args_dirs(args, seed, "train") # ShangRu_202307_Test
+    set_args_dirs(args, seed, "train") # 
     time_stamp: str = datetime.now().strftime('%Y%m%d_%H_%M_%S')
     print(f"datetime: {time_stamp}\n")
-    dump_config(Path(args.log_dir).joinpath(f"{time_stamp}_args.toml"), args.__dict__) # ShangRu_202307_Test
+    dump_config(Path(args.log_dir).joinpath(f"{time_stamp}_args.toml"), args.__dict__) # 
 
     ''' Load Dataset and Prepare Dataloader '''
     print('===> Preparing dataloader ... ')
     train_loader = torch.utils.data.DataLoader(data.SegDataset(args, mode='train'),
                                                batch_size=args.train_batch,
                                                num_workers=args.workers,
-                                               worker_init_fn=seed_worker, # ShangRu_202307_Test
-                                               generator=g, # ShangRu_202307_Test
-                                               pin_memory=True, # ShangRu_202307_Test
+                                               worker_init_fn=seed_worker, # 
+                                               generator=g, # 
+                                               pin_memory=True, # 
                                                shuffle=True)
     val_loader = torch.utils.data.DataLoader(data.SegDataset(args, mode='val'),
                                              batch_size=args.train_batch,
                                              num_workers=args.workers,
-                                             pin_memory=True, # ShangRu_202307_Test
+                                             pin_memory=True, # 
                                              shuffle=False)
 
     ''' Load Model '''
@@ -90,17 +90,17 @@ def main():
                            weight_decay=args.weight_decay)
 
     ''' Setup Tensorboard '''
-    writer = SummaryWriter(args.log_dir) # ShangRu_202307_Test
+    writer = SummaryWriter(args.log_dir) # 
     
     ''' Train Model '''
-    print('===> Start training ...\n') # ShangRu_202307_Test
+    print('===> Start training ...\n') # 
     iters = 0
     best_mIoU = 0
-    best_val_loss = np.inf # ShangRu_202307_Test
+    best_val_loss = np.inf # 
     for epoch in range(1, args.epoch + 1):
         model.train()
-        for idx, (img_ids, imgs, segs) in enumerate(train_loader): # ShangRu_202307_Test
-            train_info = 'Epoch: [{0}][{1}/{2}], [{3}]'.format(epoch, idx+1, len(train_loader), img_ids) # ShangRu_202307_Test
+        for idx, (img_ids, imgs, segs) in enumerate(train_loader): # 
+            train_info = 'Epoch: [{0}][{1}/{2}], [{3}]'.format(epoch, idx+1, len(train_loader), img_ids) # 
             iters += 1
 
             if args.patch == True:
@@ -139,23 +139,23 @@ def main():
             writer.add_scalar('val_loss', val_loss.data.cpu().numpy(), epoch)
             print('Epoch [{}]: validation loss: {}'.format(epoch, val_loss.data.cpu().numpy()))
             
-            print(); print("="*80, "\n") # ShangRu_202307_Test
+            print(); print("="*80, "\n") # 
 
             # Save Best Model 
             if val_loss < best_val_loss - 1e-4:
-                save_model(model, Path(args.checkpoints).joinpath(f"model_{args.model}_best_pth.tar")) # ShangRu_202307_Test
+                save_model(model, Path(args.checkpoints).joinpath(f"model_{args.model}_best_pth.tar")) # 
                 #best_mIoU = mIoU
                 best_val_loss = val_loss
                 best_epoch = epoch
         
         ''' Save Model (Define in above)'''
         if epoch % 50 == 0:
-            save_model(model, Path(args.checkpoints).joinpath(f"model_{args.model}_{epoch}_pth.tar")) # ShangRu_202307_Test
+            save_model(model, Path(args.checkpoints).joinpath(f"model_{args.model}_{epoch}_pth.tar")) # 
     
     print('The best model occurred in Epoch [{}] with validation loss {}'.format(best_epoch, best_val_loss))
     print()
-    print_nvidia_smi() # ShangRu_202307_Test
-    # writer.add_graph(model, imgs) # ShangRu_202307_Test ( 改成 evaluate 再存 )
+    print_nvidia_smi() # 
+    # writer.add_graph(model, imgs) #  ( 改成 evaluate 再存 )
     # -------------------------------------------------------------------------/
 
 

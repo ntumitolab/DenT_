@@ -1,5 +1,5 @@
 import os
-from pathlib import Path # ShangRu_202307_Test
+from pathlib import Path # 
 import torch
 import torchvision.transforms as transforms
 from torchvision.transforms import functional as F
@@ -41,8 +41,8 @@ class SegDataset(Dataset):
         self.root_dir = os.path.join(args.data_path, mode)
         
         #for tiff        
-        self.img_dir = os.path.join(self.root_dir, args.source_image); print(f"img : {Path(self.img_dir).resolve()}") # ShangRu_202307_Test: data\{DataSet}_DenT\train\source
-        self.seg_dir = os.path.join(self.root_dir, args.target_image); print(f"seg : {Path(self.seg_dir).resolve()}") # ShangRu_202307_Test
+        self.img_dir = os.path.join(self.root_dir, args.source_image); print(f"img : {Path(self.img_dir).resolve()}") # : data\{DataSet}_DenT\train\source
+        self.seg_dir = os.path.join(self.root_dir, args.target_image); print(f"seg : {Path(self.seg_dir).resolve()}") # 
         self.path_lists = [(os.path.join(self.img_dir, img), os.path.join(self.seg_dir, img)) for img in os.listdir(self.img_dir)]
         
     def __len__(self):
@@ -90,4 +90,4 @@ class SegDataset(Dataset):
                 img = img[rand]
                 seg = seg[rand]
      
-        return img_name.split(os.sep)[-1], img, seg # ShangRu_202307_Test
+        return img_name.split(os.sep)[-1], img, seg # 

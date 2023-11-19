@@ -9,7 +9,7 @@ from utils import *
 import torch.nn as nn
 import torch.nn.functional as F
 
-# ShangRu_202307_Test
+# 
 import sys
 from pathlib import Path
 from datetime import datetime
@@ -88,19 +88,19 @@ def evaluate(args, model, data_loader, save_img=False):
 
 if __name__ == '__main__':
     
-    args = get_args("test")  # ShangRu_202307_Test
+    args = get_args("test")  # 
 
     ''' Setup GPU '''
     # torch.cuda.set_device(args.gpu)
-    torch.cuda.empty_cache() # ShangRu_202307_Test
+    torch.cuda.empty_cache() # 
 
     ''' Setup Random Seed '''
-    set_reproducibility(args.random_seed) # ShangRu_202307_Test
-    seed = np.random.randint(100000) # ShangRu_202307_Test
-    assert seed == 15725 # ShangRu_202307_Test
+    set_reproducibility(args.random_seed) # 
+    seed = np.random.randint(100000) # 
+    assert seed == 15725 # 
     
     ''' Set dirs '''
-    set_args_dirs(args, seed, "test") # ShangRu_202307_Test
+    set_args_dirs(args, seed, "test") # 
     time_stamp: str = datetime.now().strftime('%Y%m%d_%H_%M_%S')
     print(f"datetime: {time_stamp}\n")
     
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     test_loader = torch.utils.data.DataLoader(data.SegDataset(args, mode='test'),
                                          batch_size=args.test_batch,
                                          num_workers=args.workers,
-                                         pin_memory=True, # ShangRu_202307_Test
+                                         pin_memory=True, # 
                                          shuffle=False)
     
     ''' prepare best model for visualization and evaluation '''
@@ -136,12 +136,12 @@ if __name__ == '__main__':
         model = torch.nn.DataParallel(model)
     model.cuda()
     
-    best_model_path = Path(args.checkpoints).joinpath(f"model_{args.model}_best_pth.tar") # ShangRu_202307_Test
-    best_checkpoint = torch.load(best_model_path); print(f"load model : {best_model_path.resolve()}") # ShangRu_202307_Test
+    best_model_path = Path(args.checkpoints).joinpath(f"model_{args.model}_best_pth.tar") # 
+    best_checkpoint = torch.load(best_model_path); print(f"load model : {best_model_path.resolve()}") # 
     model.load_state_dict(best_checkpoint)
     iou, loss = evaluate(args, model, test_loader, save_img=True)
     print('Testing iou: {}'.format(iou))
     print('Testing loss: {}'.format(loss))
     print()
-    print_nvidia_smi() # ShangRu_202307_Test
+    print_nvidia_smi() # 
     # -------------------------------------------------------------------------/
