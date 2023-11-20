@@ -16,10 +16,10 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
     torch=1.13.1+cu116
     ```
 
-## Data
+## Dataset
 
-1. Data is currently available [here](https://drive.google.com/drive/folders/10LJxPudM3GWgYvN6Rz-DhLWFRMt4WJLD?usp=sharing)
-2. Create a new directory `DenT` under `./data/`, and put the Data to `./data/DenT/`
+1. Download the dataset from [IEEEDataPort](https://ieee-dataport.org/documents/ac16-human-cardiomyocyte-cell-line-sybr-goldtm-labeled-thermo-fisher-scientific-inc-and) or [Google Drive](https://drive.google.com/drive/folders/10LJxPudM3GWgYvN6Rz-DhLWFRMt4WJLD?usp=sharing)
+2. Create a new directory `DenT` under `./data/`, and put the dataset under `./data/DenT/`
 
 - If you want to train with your own data, please put your dataset `***` inside `./data/`. target dataset and source dataset should be named as `./data/***/train/target`and`./data/***/train/source`.
 - Create your own testing set and validation set by running the following script:
@@ -32,7 +32,7 @@ All of the processes are trained on Taiwan Computing Cloud (TWCC) and with an NV
 
 ## Results
 
-1. Download the results from [here](https://gofile.me/7472U/P7jboFktj)
+1. Download the `results.zip` from [latest release](https://github.com/DANTA-HOJA/DenT/releases/latest) and unzip it ( Note: download all `results.z*` together before unzip )
 2. Move the `checkpoints` directory according to the structure of `./results`, `./results` is used to store the training results and as a variable `result_root` introduced in the next section (`result_root = ./results`)
 
 ## Train
